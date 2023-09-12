@@ -18,8 +18,9 @@
 	<nav>
 		<HeaderLink href="/">Home</HeaderLink>
 		<HeaderLink href="/ssr-comments">SSR</HeaderLink>
-		<HeaderLink href="/prerendered-comments">Prerender</HeaderLink>
+		<HeaderLink href="/ssg-comments">SSG</HeaderLink>
 		<HeaderLink href="/streaming">Streaming</HeaderLink>
+		<HeaderLink href="/ssg-comments-isr">SSG + ISR</HeaderLink>
 	</nav>
 
 	<AvatarButton />
@@ -33,7 +34,7 @@
 
 <style>
 	:root {
-		font-size: 1.25rem;
+		font-size: 1.15rem;
 		--primary: #e77728;
 		--surface: #f1f1f1;
 		--primary-80: #e7772880;
@@ -61,7 +62,7 @@
 		z-index: 1;
 		background: #ffd151;
 		display: flex;
-		padding: 0.5rem 1.5rem;
+		padding: 0.5rem 0.8rem;
 	}
 
 	nav {

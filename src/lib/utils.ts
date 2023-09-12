@@ -5,7 +5,7 @@ export const uuid = () => {
 	return crypto.randomUUID();
 };
 
-export const makeNewComment = (body: string, avatar?: string) => ({ id: uuid(), body, avatar });
+export const makeNewComment = (body: string, avatar?: string) => ({ body, avatar });
 
 export const fetchAvatar = async (_fetch = fetch) => {
 	try {

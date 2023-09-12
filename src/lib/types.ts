@@ -1,5 +1,9 @@
 export interface IComment {
-	id: string;
 	body: string;
 	avatar?: string;
+}
+
+export interface IRandomData {
+	name: string;
+	age: number;
 }

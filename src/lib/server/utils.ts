@@ -1,19 +1,15 @@
-import fs from 'fs';
-import path from 'path';
-import type { IComment } from '../types';
-import { fileURLToPath } from 'url';
+import { env } from '$env/dynamic/private';
+import type { IComment, IRandomData } from '../types';
+import { createClient } from '@supabase/supabase-js';
+
+// Create a single supabase client for interacting with your database
+const supabase = createClient(env.SUPABASE_URL as string, env.SUPABASE_PUBLIC_KEY as string);
 
 export const fetchUserComments = async () => {
-	// We are trying to simulate user-specific data here.
-	// In a real app, you would probably use a database.
-	const filePath = getUserCommentsFilePath();
-
-	if (!fs.existsSync(filePath)) {
-		fs.writeFileSync(filePath, JSON.stringify([]));
-	}
-
-	const fileContents = fs.readFileSync(filePath, 'utf8');
-	const userComments = JSON.parse(fileContents);
+	const { data: userComments } = await supabase
+		.from('comments')
+		.select('*')
+		.order('id', { ascending: false });
 
 	return userComments;
 };
@@ -21,28 +17,21 @@ export const fetchUserComments = async () => {
 export const fetchComments = async (_fetch: typeof fetch) => {
 	const userComments = await fetchUserComments();
 
-	const commentsRespose = await _fetch('https://dummyjson.com/comments');
-	const { comments } = await commentsRespose.json();
-
-	return [...userComments, ...comments];
-};
-
-export const getUserCommentsFilePath = () => {
-	const __filename = fileURLToPath(import.meta.url);
-	const __dirname = path.dirname(__filename);
-	return path.join(__dirname, 'user-comments.json');
+	return userComments;
 };
 
 export const postUserComment = async (comment: IComment) => {
-	const filePath = getUserCommentsFilePath();
-	const fileContents = fs.readFileSync(filePath, 'utf8');
+	const { data, error } = await supabase.from('comments').insert([comment]);
 
-	const userComments: IComment[] = JSON.parse(fileContents);
-	userComments.unshift(comment);
+	if (error) {
+		console.error(error);
+		return;
+	}
 
-	fs.writeFileSync(filePath, JSON.stringify(userComments));
+	console.log(data);
 };
 
+// Used to demonstrate streaming feature
 export const generateRandomColor = async () => {
 	const int = Math.floor(Math.random() * 16777215);
 
@@ -53,4 +42,29 @@ export const generateRandomColor = async () => {
 		.join('');
 
 	return hex.slice(0, 6);
+};
+
+export const generateRandomString = (length: number) => {
+	const characters = 'abcdefghijklmnopqrstuvwxyz';
+	let result = '';
+	for (let i = 0; i < length; i++) {
+		result += characters.charAt(Math.floor(Math.random() * characters.length));
+	}
+	return result;
+};
+
+export const generateLargeJSON = () => {
+	const largeObj: { data: IRandomData[] } = { data: [] };
+	let size = 0;
+	const targetSize = 2 * 1024 * 1024; // 2MB in bytes
+
+	while (size < targetSize) {
+		const randomData = {
+			name: generateRandomString(10),
+			age: Math.floor(Math.random() * 100)
+		};
+		largeObj.data.push(randomData);
+		size = Buffer.from(JSON.stringify(largeObj)).length;
+	}
+	return largeObj;
 };

@@ -18,15 +18,16 @@
 	.comments-list {
 		display: block;
 		list-style-type: none;
-		padding-left: 2rem;
-		padding-right: 2rem;
+		width: var(--comments-width);
+		margin: 0 auto;
 	}
 
 	.comment {
-		margin-bottom: 0.8rem;
+		margin-bottom: var(--comments-spacing);
 		background-color: var(--surface);
-		padding: 0.5rem;
-		border-radius: 0.5rem;
+		height: var(--comment-height);
+		padding: 0 0.5rem;
+		border-radius: var(--border-radius);
 		display: flex;
 		align-items: center;
 		gap: 0.5rem;

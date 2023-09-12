@@ -1,5 +1,5 @@
 import { env } from '$env/dynamic/private';
-import type { IComment, IRandomData } from '../types';
+import type { IComment } from '../types';
 import { createClient } from '@supabase/supabase-js';
 
 // Create a single supabase client for interacting with your database
@@ -44,27 +44,17 @@ export const generateRandomColor = async () => {
 	return hex.slice(0, 6);
 };
 
-export const generateRandomString = (length: number) => {
-	const characters = 'abcdefghijklmnopqrstuvwxyz';
-	let result = '';
-	for (let i = 0; i < length; i++) {
-		result += characters.charAt(Math.floor(Math.random() * characters.length));
-	}
-	return result;
-};
-
-export const generateLargeJSON = () => {
-	const largeObj: { data: IRandomData[] } = { data: [] };
-	let size = 0;
-	const targetSize = 2 * 1024 * 1024; // 2MB in bytes
-
-	while (size < targetSize) {
-		const randomData = {
-			name: generateRandomString(10),
-			age: Math.floor(Math.random() * 100)
-		};
-		largeObj.data.push(randomData);
-		size = Buffer.from(JSON.stringify(largeObj)).length;
-	}
-	return largeObj;
+export const delayedFetchComments = async ({
+	fetch: _fetch,
+	milliseconds
+}: {
+	fetch: typeof fetch;
+	milliseconds: number;
+}) => {
+	return new Promise((resolve) => {
+		setTimeout(async () => {
+			const comments = await fetchComments(_fetch);
+			resolve(comments);
+		}, milliseconds);
+	});
 };

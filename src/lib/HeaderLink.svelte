@@ -14,7 +14,7 @@
 		font-weight: 500;
 		padding: 0.48rem;
 		color: var(--text);
-		border-radius: 0.5rem;
+		border-radius: var(--border-radius);
 		display: flex;
 		align-items: center;
 		justify-content: center;

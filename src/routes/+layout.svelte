@@ -19,6 +19,7 @@
 		<HeaderLink href="/">Home</HeaderLink>
 		<HeaderLink href="/ssr-comments">SSR</HeaderLink>
 		<HeaderLink href="/prerendered-comments">Prerender</HeaderLink>
+		<HeaderLink href="/streaming">Streaming</HeaderLink>
 	</nav>
 
 	<AvatarButton />
@@ -37,7 +38,11 @@
 		--surface: #f1f1f1;
 		--primary-80: #e7772880;
 		--primary-30: #e7772830;
+		--border-radius: 0.5rem;
 		--text: #333;
+		--comment-height: 64px;
+		--comments-spacing: 1rem;
+		--comments-width: 80vw;
 	}
 
 	:global(*) {

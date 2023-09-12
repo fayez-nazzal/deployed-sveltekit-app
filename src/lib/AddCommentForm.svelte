@@ -1,10 +1,12 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { invalidate } from '$app/navigation';
+	import { invalidate, invalidateAll } from '$app/navigation';
 
 	export let method: string | undefined = undefined;
-	export let onSubmit: (e: Event) => void = async () => {
-		await invalidate('layout');
+	export let action: string | undefined = undefined;
+
+	const onSubmit = async () => {
+		await invalidateAll();
 	};
 
 	let newComment = '';
@@ -12,7 +14,7 @@
 	const enhanceAction = method === 'POST' ? enhance : () => {};
 </script>
 
-<form {method} on:submit={onSubmit} use:enhanceAction>
+<form {method} {action} on:submit={onSubmit} use:enhanceAction>
 	<input type="text" name="comment" bind:value={newComment} />
 	<button type="submit">Send</button>
 </form>
@@ -37,7 +39,7 @@
 
 	input,
 	button {
-		border-radius: 0.5rem;
+		border-radius: var(--border-radius);
 		padding: 1rem 0.64rem;
 		border: none;
 		font-weight: 500;

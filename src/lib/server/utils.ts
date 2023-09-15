@@ -11,7 +11,7 @@ export const fetchUserComments = async () => {
 		.select('*')
 		.order('created_at', { ascending: false });
 
-	return userComments;
+	return userComments as IComment[];
 };
 
 export const fetchComments = async (_fetch: typeof fetch) => {

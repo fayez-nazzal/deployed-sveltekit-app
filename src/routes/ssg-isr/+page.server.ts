@@ -12,5 +12,6 @@ export const load: PageServerLoad = async () => {
 export const config = {
 	isr: {
 		expiration: 15 // regenerate every 15 seconds
-	}
+	},
+	runtime: 'nodejs18.x'
 };

@@ -6,7 +6,7 @@
 	export let data: PageData;
 </script>
 
-<AddCommentForm method="POST" action="/ssr-comments" />
+<AddCommentForm method="POST" action="/ssr" />
 
 {#await data.streamed.comments}
 	{#each Array(5) as _}

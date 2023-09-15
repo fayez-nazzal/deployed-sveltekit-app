@@ -18,8 +18,8 @@
 	<nav>
 		<HeaderLink href="/">Home</HeaderLink>
 		<HeaderLink href="/ssr-comments">SSR</HeaderLink>
-		<HeaderLink href="/ssg-comments">SSG</HeaderLink>
 		<HeaderLink href="/streaming">Streaming</HeaderLink>
+		<HeaderLink href="/ssg-comments">SSG</HeaderLink>
 		<HeaderLink href="/ssg-comments-isr">SSG + ISR</HeaderLink>
 		<HeaderLink href="/cache-headers">Cache Headers</HeaderLink>
 	</nav>

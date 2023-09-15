@@ -18,7 +18,7 @@
 	<nav>
 		<HeaderLink href="/">Home</HeaderLink>
 		<HeaderLink href="/ssr">SSR</HeaderLink>
-		<HeaderLink href="/streaming">Streaming</HeaderLink>
+		<HeaderLink href="/ssr-streaming">Streaming</HeaderLink>
 		<HeaderLink href="/ssg">SSG</HeaderLink>
 		<HeaderLink href="/ssg-isr">SSG + ISR</HeaderLink>
 		<HeaderLink href="/cache-headers">Cache Headers</HeaderLink>

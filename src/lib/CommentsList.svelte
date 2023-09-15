@@ -19,7 +19,7 @@
 		display: block;
 		list-style-type: none;
 		width: var(--comments-width);
-		margin: 0 auto;
+		margin: 8px auto;
 	}
 
 	.comment {

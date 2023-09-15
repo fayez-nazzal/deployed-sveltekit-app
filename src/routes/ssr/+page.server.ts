@@ -1,8 +1,17 @@
 import { makeNewComment } from '$lib/utils';
-import { postUserComment } from '$lib/server/utils';
+import { fetchComments, postUserComment } from '$lib/server/utils';
 import { fail, type Actions } from '@sveltejs/kit';
+import type { PageServerLoad } from './$types';
 
 export const ssr = true;
+
+export const load: PageServerLoad = async () => {
+	const comments = await fetchComments(fetch);
+
+	return {
+		comments
+	}
+};
 
 export const actions = {
 	default: async ({ request, cookies }) => {

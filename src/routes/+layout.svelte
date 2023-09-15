@@ -17,10 +17,10 @@
 <header class="flex items-center justify-between p-4 bg-gray-100">
 	<nav>
 		<HeaderLink href="/">Home</HeaderLink>
-		<HeaderLink href="/ssr-comments">SSR</HeaderLink>
+		<HeaderLink href="/ssr">SSR</HeaderLink>
 		<HeaderLink href="/streaming">Streaming</HeaderLink>
-		<HeaderLink href="/ssg-comments">SSG</HeaderLink>
-		<HeaderLink href="/ssg-comments-isr">SSG + ISR</HeaderLink>
+		<HeaderLink href="/ssg">SSG</HeaderLink>
+		<HeaderLink href="/ssg-isr">SSG + ISR</HeaderLink>
 		<HeaderLink href="/cache-headers">Cache Headers</HeaderLink>
 	</nav>
 

@@ -21,6 +21,7 @@
 		<HeaderLink href="/ssg-comments">SSG</HeaderLink>
 		<HeaderLink href="/streaming">Streaming</HeaderLink>
 		<HeaderLink href="/ssg-comments-isr">SSG + ISR</HeaderLink>
+		<HeaderLink href="/cache-headers">Cache Headers</HeaderLink>
 	</nav>
 
 	<AvatarButton />
@@ -34,7 +35,6 @@
 
 <style>
 	:root {
-		font-size: 1.15rem;
 		--primary: #e77728;
 		--surface: #f1f1f1;
 		--primary-80: #e7772880;
@@ -67,7 +67,7 @@
 
 	nav {
 		display: flex;
-		gap: 0.5rem;
+		gap: 0.25rem;
 		margin-right: auto;
 	}
 

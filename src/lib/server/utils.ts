@@ -9,7 +9,7 @@ export const fetchUserComments = async () => {
 	const { data: userComments } = await supabase
 		.from('comments')
 		.select('*')
-		.order('id', { ascending: false });
+		.order('created_at', { ascending: false });
 
 	return userComments;
 };

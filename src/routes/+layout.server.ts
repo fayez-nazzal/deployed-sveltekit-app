@@ -1,10 +1,10 @@
-import { fetchAvatar } from '$lib/utils';
+import { generateAvatar } from '$lib/server/utils';
 import type { ServerLoad } from '@sveltejs/kit';
 
 export const csr = false;
 
-export const load: ServerLoad = async ({ fetch, cookies }) => {
-	const avatar = cookies.get('avatar') || (await fetchAvatar(fetch));
+export const load: ServerLoad = async ({ cookies }) => {
+	const avatar = cookies.get('avatar') || (await generateAvatar());
 
 	cookies.set('avatar', avatar);
 

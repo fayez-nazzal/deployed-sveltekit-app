@@ -45,7 +45,7 @@ export const generateRandomColor = async () => {
 	return hex.slice(0, 6);
 };
 
-export const fetchAvatar = async () => {
+export const generateAvatar = async () => {
 	try {
 		// include credentials so that the cookie is sent
 		const color1 = await generateRandomColor();

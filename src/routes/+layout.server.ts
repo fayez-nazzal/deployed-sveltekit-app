@@ -1,12 +1,10 @@
 import { generateAvatar } from '$lib/server/utils';
 import type { ServerLoad } from '@sveltejs/kit';
 
-export const csr = false;
+export const prerender = true;
 
-export const load: ServerLoad = async ({ cookies }) => {
-	const avatar = cookies.get('avatar') || (await generateAvatar());
-
-	cookies.set('avatar', avatar);
+export const load: ServerLoad = async () => {
+	const avatar = await generateAvatar();
 
 	return {
 		avatar

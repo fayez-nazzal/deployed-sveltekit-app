@@ -1,18 +1,8 @@
 <script lang="ts">
 	import { avatar } from './stores';
-
-	export let setAvatar = (value: string) => {
-		$avatar = value;
-	};
-
-	const generateAvatar = async () => {
-		const res = await fetch('/api/avatar');
-		const avatar = await res.text();
-		setAvatar(avatar);
-	};
 </script>
 
-<button on:click={generateAvatar}>
+<button>
 	<img src={$avatar} alt="avatar" width={48} height={48} />
 </button>
 

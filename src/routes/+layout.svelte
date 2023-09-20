@@ -17,9 +17,7 @@
 <header class="flex items-center justify-between p-4 bg-gray-100">
 	<nav>
 		<HeaderLink href="/">Home</HeaderLink>
-		<HeaderLink href="/ssr">SSR</HeaderLink>
 		<HeaderLink href="/ssg">SSG</HeaderLink>
-		<HeaderLink href="/ssr-streaming">Streaming</HeaderLink>
 		<HeaderLink href="/ssg-isr">SSG + ISR</HeaderLink>
 		<HeaderLink href="/cache-headers">Cache Headers</HeaderLink>
 	</nav>

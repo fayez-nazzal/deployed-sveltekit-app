@@ -1,4 +1,5 @@
 import { env } from '$env/dynamic/private';
+import { DEFAULT_AVATAR_SRC } from '$lib/constants';
 import type { IComment } from '../types';
 import { createClient } from '@supabase/supabase-js';
 
@@ -42,6 +43,20 @@ export const generateRandomColor = async () => {
 		.join('');
 
 	return hex.slice(0, 6);
+};
+
+export const fetchAvatar = async () => {
+	try {
+		// include credentials so that the cookie is sent
+		const color1 = await generateRandomColor();
+		const color2 = await generateRandomColor();
+		const color3 = await generateRandomColor();
+
+		const url = `https://source.boringavatars.com/beam/120/Stefan?colors=${color1},${color2},${color3}`;
+		return url;
+	} catch {
+		return DEFAULT_AVATAR_SRC;
+	}
 };
 
 export const delayedFetchComments = async ({

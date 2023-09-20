@@ -7,17 +7,6 @@ export const uuid = () => {
 
 export const makeNewComment = (body: string, avatar?: string) => ({ body, avatar });
 
-export const fetchAvatar = async (_fetch = fetch) => {
-	try {
-		// include credentials so that the cookie is sent
-		const res = await _fetch('/api/avatar', { credentials: 'include' });
-		const emoji = await res.text();
-		return emoji;
-	} catch {
-		return DEFAULT_AVATAR_SRC;
-	}
-};
-
 export const getCommentAvatar = (comment: IComment) => {
 	return comment.avatar || DEFAULT_AVATAR_SRC;
 };

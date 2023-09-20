@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { avatar } from './stores';
-	import { fetchAvatar } from './utils';
 
 	export let setAvatar = (value: string) => {
 		$avatar = value;
 	};
 
 	const generateAvatar = async () => {
-		const avatar = await fetchAvatar();
+		const res = await fetch('/api/avatar');
+		const avatar = await res.text();
 		setAvatar(avatar);
 	};
 </script>

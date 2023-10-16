@@ -15,12 +15,6 @@ export const fetchUserComments = async () => {
 	return userComments as IComment[];
 };
 
-export const fetchComments = async (_fetch: typeof fetch) => {
-	const userComments = await fetchUserComments();
-
-	return userComments;
-};
-
 export const postUserComment = async (comment: IComment) => {
 	const { data, error } = await supabase.from('comments').insert([comment]);
 
@@ -59,16 +53,10 @@ export const generateAvatar = async () => {
 	}
 };
 
-export const delayedFetchComments = async ({
-	fetch: _fetch,
-	milliseconds
-}: {
-	fetch: typeof fetch;
-	milliseconds: number;
-}) => {
+export const delayedFetchComments = async ({ milliseconds }: { milliseconds: number }) => {
 	return new Promise((resolve) => {
 		setTimeout(async () => {
-			const comments = await fetchComments(_fetch);
+			const comments = await fetchUserComments();
 			resolve(comments);
 		}, milliseconds);
 	});

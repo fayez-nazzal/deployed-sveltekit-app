@@ -4,10 +4,10 @@ import type { ServerLoad } from '@sveltejs/kit';
 export const ssr = true;
 export const csr = true; // required for streaming
 
-export const load: ServerLoad = async ({ fetch }) => {
+export const load: ServerLoad = async () => {
 	return {
 		streamed: {
-			comments: delayedFetchComments({ fetch, milliseconds: 2000 })
+			comments: delayedFetchComments({ milliseconds: 2000 })
 		}
 	};
 };

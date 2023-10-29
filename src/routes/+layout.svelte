@@ -19,7 +19,6 @@
 		<HeaderLink href="/">Home</HeaderLink>
 		<HeaderLink href="/ssg">SSG</HeaderLink>
 		<HeaderLink href="/ssg-isr">SSG + ISR</HeaderLink>
-		<HeaderLink href="/cache-headers">Cache Headers</HeaderLink>
 	</nav>
 
 	<AvatarButton />

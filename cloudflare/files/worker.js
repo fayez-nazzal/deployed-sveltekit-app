@@ -15,7 +15,8 @@ const worker = {
 		let res = !pragma.includes('no-cache') && (await Cache.lookup(req));
 		if (res) return res;
         
-		let { pathname } = new URL(req.url);
+		const url = new URL(req.url);
+        let { pathname } = url;
 
         try {
             const cachedPage = await env.kv.get(key)

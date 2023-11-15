@@ -20,8 +20,8 @@ const worker = {
 
         try {
             const cachedPageBody = await env.kv.get(pathname)
-            if (cachedPage) {
-                return new Response(cachedPage)
+            if (cachedPageBody) {
+                return new Response(cachedPageBody)
             }
         } catch (err) {
             // Page wasn't found in cache, ignore the error
@@ -64,14 +64,10 @@ const worker = {
 				}
 			});
 
-            res = res.clone()
-
             console.log(JSON.stringify(res))
 
-            res = res.clone()
-
             // expire after 1 minute
-            await env.kv.put(pathname, res.body, {expirationTtl: 60})
+            await env.kv.put(pathname, 'test', {expirationTtl: 60})
 		}
 
 		// write to `Cache` only if response is not an error,

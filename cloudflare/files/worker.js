@@ -64,8 +64,11 @@ const worker = {
 				}
 			});
 
+            res = res.clone()
 
             console.log(JSON.stringify(res))
+
+            res = res.clone()
 
             // expire after 1 minute
             await env.kv.put(pathname, res.body, {expirationTtl: 60})

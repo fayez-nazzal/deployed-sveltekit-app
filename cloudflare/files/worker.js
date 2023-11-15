@@ -18,7 +18,7 @@ const worker = {
 		let { pathname } = new URL(req.url);
 
         try {
-            const cachedPage = await context.kv.get(key)
+            const cachedPage = await env.kv.get(key)
             if (cachedPage) {
                 return new Response(cachedPage)
             }
@@ -64,7 +64,7 @@ const worker = {
 			});
 
             // expire after 1 minute
-            await context.kv.put(url, res, {expirationTtl: 60})
+            await env.kv.put(url, res, {expirationTtl: 60})
 		}
 
 		// write to `Cache` only if response is not an error,

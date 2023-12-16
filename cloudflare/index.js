@@ -42,7 +42,7 @@ export default function (defaults = {}) {
 				`${tmp}/manifest.js`,
 				`export const manifest = ${builder.generateManifest({ relativePath })};\n\n` +
 				`export const prerendered = new Set(${JSON.stringify(builder.prerendered.paths)});\n` +
-				`export const isr = new Set(${JSON.stringify(isr)});\n`
+				`export const isr = JSON.stringify(isr);\n`
 			);
 
 			writeFileSync(

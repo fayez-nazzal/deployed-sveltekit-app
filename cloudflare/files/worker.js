@@ -23,10 +23,15 @@ const worker = {
 		console.log('env kv exists', !!env.kv);
 
 		try {
-			const cachedPageBody = await env.kv.get(key);
-			if (cachedPageBody) {
-				console.log(`cached page body exists`, JSON.stringify(cachedPageBody));
-				return new Response(cachedPageBody);
+			const cachedResponseStr = await env.kv.get(key);
+			if (cachedResponseStr) {
+				console.log(`found cachedResponseStr`, cachedResponseStr);
+				const cachedResponse = JSON.parse(cachedResponseStr);
+				const res = new Response();
+				res.body = cachedResponse.body;
+				res.status = 200;
+				res.headers = cachedResponse.headers;
+				return res;
 			}
 		} catch (err) {
 			console.log(JSON.stringify(err));
@@ -82,7 +87,14 @@ const worker = {
 
 			// TODO Do that only for ISR pages
 			// expire after 1 minute
-			await env.kv.put(key, JSON.stringify(clonedResponse), { expirationTtl: 60 });
+			await env.kv.put(
+				key,
+				JSON.stringify({
+					body: clonedResponse.body,
+					headers: await clonedResponse.headers
+				}),
+				{ expirationTtl: 60 }
+			);
 			console.log(`will expire after 1 minute`);
 		}
 

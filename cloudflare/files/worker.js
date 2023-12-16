@@ -78,9 +78,11 @@ const worker = {
 				}
 			});
 
+			const clonedResponse = await res.clone();
+
 			// TODO Do that only for ISR pages
 			// expire after 1 minute
-			await env.kv.put(key, await res.clone(), { expirationTtl: 60 });
+			await env.kv.put(key, JSON.stringify(clonedResponse), { expirationTtl: 60 });
 			console.log(`will expire after 1 minute`);
 		}
 

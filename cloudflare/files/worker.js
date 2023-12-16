@@ -23,14 +23,15 @@ const worker = {
 		console.log('env kv exists', !!env.kv);
 
 		try {
-			const cachedResponseStr = await env.kv.get(key);
-			if (cachedResponseStr) {
-				console.log(`found cachedResponseStr`, cachedResponseStr);
-				const cachedResponse = JSON.parse(cachedResponseStr);
-				const res = new Response();
-				res.body = cachedResponse.body;
-				res.status = 200;
-				res.headers = cachedResponse.headers;
+			const cachedResponse = await env.kv.get(key);
+			if (cachedResponse) {
+				console.log(`found a cached page`, cachedResponse);
+				// TODO Create a new Response with the cached content
+				const cachedHeaders = new Headers({
+					'Content-Type': 'text/html', // Use the appropriate content-type
+					'CF-Cache-Status': 'HIT'
+				});
+				const res = new Response(cachedResponse, { headers: cachedHeaders });
 				return res;
 			}
 		} catch (err) {
@@ -83,18 +84,12 @@ const worker = {
 				}
 			});
 
-			const clonedResponse = await res.clone();
-
-			// TODO Do that only for ISR pages
-			// expire after 1 minute
-			await env.kv.put(
-				key,
-				JSON.stringify({
-					body: clonedResponse.body,
-					headers: await clonedResponse.headers
-				}),
-				{ expirationTtl: 60 }
-			);
+			if (res.ok) {
+				// Ensure we don't cache failed responses
+				const bodyText = await res.clone().text(); // Clone the response to read the body as text
+				await env.kv.put(key, bodyText, { expirationTtl: 60 }); // Use the right expiration time
+				console.log(`Cache stored for ${key} and will expire after 1 minute`);
+			}
 			console.log(`will expire after 1 minute`);
 		}
 

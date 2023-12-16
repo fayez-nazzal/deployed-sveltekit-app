@@ -17,6 +17,8 @@ const worker = {
 
 		const url = new URL(req.url);
 		let { pathname } = url;
+		
+		console.log('env', JSON.stringify(env));
 
 		try {
 			const cachedPageBody = await env.kv.get(pathname);
@@ -44,13 +46,13 @@ const worker = {
 		if (filename) {
 			is_static_asset =
 				manifest.assets.has(filename) || manifest.assets.has(filename + '/index.html');
-			console.log(`file ${filename} is a static asset or a prerendered page`);
+			console.log('manifest assets', JSON.stringify(manifest.assets));
 		}
 
 		const location = pathname.at(-1) === '/' ? stripped_pathname : pathname + '/';
 
 		if (is_static_asset || prerendered.has(pathname)) {
-			console.log(`fetching asset`);
+			console.log(`file ${filename} is a static asset or a prerendered page`);
 			res = await env.ASSETS.fetch(req);
 		} else if (location && prerendered.has(location)) {
 			console.log(

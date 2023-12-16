@@ -4,99 +4,70 @@ import * as Cache from 'worktop/cfw.cache';
 
 const server = new Server(manifest);
 
-/** @type {import('worktop/cfw').Module.Worker<{ ASSETS: import('worktop/cfw.durable').Durable.Object }>} */
 const worker = {
 	async fetch(req, env, context) {
-		// @ts-ignore
-		await server.init({ env });
+		await server.init({ env }); // Initialize server with the environment
 
-		// skip cache if "cache-control: no-cache" in request
-		let pragma = req.headers.get('cache-control') || '';
-		let res = !pragma.includes('no-cache') && (await Cache.lookup(req));
-		if (res) return res;
+		// Check cache unless "no-cache" is requested
+		if (req.headers.get('cache-control') !== 'no-cache') {
+			const res = await Cache.lookup(req);
+			if (res) return res;
+		}
 
-		const url = new URL(req.url);
-		let { pathname } = url;
-
+		// Obtain pathname from the request URL
+		const { pathname: rawPathname } = new URL(req.url);
+		const pathname = decodeURIComponent(rawPathname) || rawPathname;
 		const key = `key_${pathname}`;
 
-		console.log('env kv exists', !!env.kv);
-
+		// Attempt to serve from KV cache
 		try {
 			const cachedResponse = await env.kv.get(key);
 			if (cachedResponse) {
-				console.log(`found a cached page`, cachedResponse);
-				// TODO Create a new Response with the cached content
 				const cachedHeaders = new Headers({
-					'Content-Type': 'text/html', // Use the appropriate content-type
+					'Content-Type': 'text/html',
 					'CF-Cache-Status': 'HIT'
 				});
-				const res = new Response(cachedResponse, { headers: cachedHeaders });
-				return res;
+				return new Response(cachedResponse, { headers: cachedHeaders });
 			}
 		} catch (err) {
-			console.log(JSON.stringify(err));
-			console.log(`Page wasn't found in cache`);
+			// Skip if page is not in cache (we'll render and return the response below)
 		}
 
-		try {
-			pathname = decodeURIComponent(pathname);
-			console.log('decoded URI', pathname);
-		} catch {
-			// ignore invalid URI
-		}
+		// Determine if the request is for a static asset or prerendered page
+		const strippedPathname = pathname.replace(/\/$/, '');
+		const isStaticAsset =
+			manifest.assets.has(strippedPathname) ||
+			manifest.assets.has(`${strippedPathname}/index.html`);
+		const location = pathname.endsWith('/') ? strippedPathname : `${pathname}/`;
 
-		const stripped_pathname = pathname.replace(/\/$/, '');
-		console.log('stripped pathname', stripped_pathname);
-
-		// prerendered pages and /static files
-		let is_static_asset = false;
-		const filename = stripped_pathname.substring(1);
-		if (filename) {
-			is_static_asset =
-				manifest.assets.has(filename) || manifest.assets.has(filename + '/index.html');
-			console.log('manifest assets', JSON.stringify(manifest.assets));
-		}
-
-		const location = pathname.at(-1) === '/' ? stripped_pathname : pathname + '/';
-
-		if (is_static_asset || prerendered.has(pathname)) {
-			console.log(`file ${filename} is a static asset or a prerendered page`);
+		// Serve assets, prerendered pages, or process dynamic requests
+		let res;
+		if (isStaticAsset || prerendered.has(pathname)) {
 			res = await env.ASSETS.fetch(req);
 		} else if (location && prerendered.has(location)) {
-			console.log(
-				`the prerendered page exists at ${location}, not ${pathname}. Serving ${location}.`
-			);
-			res = new Response('', {
-				status: 308,
-				headers: {
-					location
-				}
-			});
+			res = new Response('', { status: 308, headers: { location } });
 		} else {
-			console.log('This page is a dynamically generated page');
-			// dynamically-generated pages
 			res = await server.respond(req, {
-				// @ts-ignore
 				platform: { env, context, caches, cf: req.cf },
-				getClientAddress() {
-					return req.headers.get('cf-connecting-ip');
-				}
+				getClientAddress: () => req.headers.get('cf-connecting-ip')
 			});
 
+			// Store in KV cache if the response is successful
 			if (res.ok) {
-				// Ensure we don't cache failed responses
-				const bodyText = await res.clone().text(); // Clone the response to read the body as text
-				await env.kv.put(key, bodyText, { expirationTtl: 60 }); // Use the right expiration time
-				console.log(`Cache stored for ${key} and will expire after 1 minute`);
+				const bodyText = await res.clone().text();
+				await env.kv.put(key, bodyText, { expirationTtl: 60 });
 			}
-			console.log(`will expire after 1 minute`);
 		}
 
-		// write to `Cache` only if response is not an error,
-		// let `Cache.save` handle the Cache-Control and Vary headers
-		pragma = res.headers.get('cache-control') || '';
-		return pragma && res.status < 400 ? Cache.save(req, res, context) : res;
+		// Utilize Cache API for eligible responses
+		if (res.status < 400) {
+			const cacheControl = res.headers.get('cache-control');
+			if (cacheControl) {
+				return Cache.save(req, res, context);
+			}
+		}
+
+		return res;
 	}
 };
 

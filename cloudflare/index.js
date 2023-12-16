@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 import * as esbuild from 'esbuild';
 
 /** @type {import('./index.js').default} */
-export default function (options = {}) {
+export default function (defaults = {}) {
 	return {
 		name: '@sveltejs/adapter-cloudflare',
 		async adapt(builder) {
@@ -24,16 +24,30 @@ export default function (options = {}) {
 			builder.writePrerendered(dest_dir);
 
 			const relativePath = path.posix.relative(tmp, builder.getServerDirectory());
+			const isr = [];
+
+			for (const route of builder.routes) {
+				const config = { ...defaults, ...route.config };
+
+				// Add pages with isr config to the isr array, to be exported later.
+				if (config.isr) {
+					isr.push({
+						pathname: route.id,
+						expiration: config.isr.expiration
+					})
+				}
+			}
 
 			writeFileSync(
 				`${tmp}/manifest.js`,
 				`export const manifest = ${builder.generateManifest({ relativePath })};\n\n` +
-					`export const prerendered = new Set(${JSON.stringify(builder.prerendered.paths)});\n`
+				`export const prerendered = new Set(${JSON.stringify(builder.prerendered.paths)});\n` +
+				`export const isr = new Set(${JSON.stringify(isr)});\n`
 			);
 
 			writeFileSync(
 				`${dest}/_routes.json`,
-				JSON.stringify(get_routes_json(builder, written_files, options.routes ?? {}), null, '\t')
+				JSON.stringify(get_routes_json(builder, written_files, defaults.routes ?? {}), null, '\t')
 			);
 
 			writeFileSync(`${dest}/_headers`, generate_headers(builder.getAppPath()), { flag: 'a' });

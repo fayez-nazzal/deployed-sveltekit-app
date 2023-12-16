@@ -1,5 +1,5 @@
 import { Server } from 'SERVER';
-import { manifest, prerendered } from 'MANIFEST';
+import { manifest, prerendered, isr } from 'MANIFEST';
 import * as Cache from 'worktop/cfw.cache';
 
 const server = new Server(manifest);
@@ -52,10 +52,11 @@ const worker = {
 				getClientAddress: () => req.headers.get('cf-connecting-ip')
 			});
 
-			// Store in KV cache if the response is successful
-			if (res.ok) {
+			// If it's an isr page, Store in KV cache if the response is successful
+			const isrPage = isr.find((page) => page.pathname === pathname || page.pathname === location);
+			if (isrPage && res.ok) {
 				const bodyText = await res.clone().text();
-				await env.kv.put(key, bodyText, { expirationTtl: 60 });
+				await env.kv.put(key, bodyText, { expirationTtl: isrPage.expiration });
 			}
 		}
 

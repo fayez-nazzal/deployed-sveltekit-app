@@ -78,12 +78,10 @@ const worker = {
 				}
 			});
 
-			console.log(`rendered response`, JSON.stringify(res));
-
 			// TODO Do that only for ISR pages
 			// expire after 1 minute
+			await env.kv.put(key, res.clone(), { expirationTtl: 60 });
 			console.log(`will expire after 1 minute`);
-			await env.kv.put(key, 'test', { expirationTtl: 60 });
 		}
 
 		// write to `Cache` only if response is not an error,

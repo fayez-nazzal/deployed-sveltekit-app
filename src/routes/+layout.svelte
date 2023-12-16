@@ -18,7 +18,6 @@
 	<nav>
 		<HeaderLink href="/">Home</HeaderLink>
 		<HeaderLink href="/ssg">SSG</HeaderLink>
-		<HeaderLink href="/ssg-isr">SSG + ISR</HeaderLink>
 	</nav>
 
 	<AvatarButton />

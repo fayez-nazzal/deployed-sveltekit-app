@@ -17,16 +17,19 @@ const worker = {
 
 		const url = new URL(req.url);
 		let { pathname } = url;
-		
-		console.log('env', JSON.stringify(env));
+
+		const key = `key_${pathname}`;
+
+		console.log('env kv exists', !!env.kv);
 
 		try {
-			const cachedPageBody = await env.kv.get(pathname);
+			const cachedPageBody = await env.kv.get(key);
 			if (cachedPageBody) {
 				console.log(`cached page body exists`, JSON.stringify(cachedPageBody));
 				return new Response(cachedPageBody);
 			}
 		} catch (err) {
+			console.log(JSON.stringify(err));
 			console.log(`Page wasn't found in cache`);
 		}
 
@@ -80,7 +83,7 @@ const worker = {
 			// TODO Do that only for ISR pages
 			// expire after 1 minute
 			console.log(`will expire after 1 minute`);
-			await env.kv.put(pathname, 'test', { expirationTtl: 60 });
+			await env.kv.put(key, 'test', { expirationTtl: 60 });
 		}
 
 		// write to `Cache` only if response is not an error,

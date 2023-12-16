@@ -14,5 +14,3 @@ export const config = {
 		expiration: 60 // regenerate every 60 seconds
 	}
 };
-
-export const csr = false;

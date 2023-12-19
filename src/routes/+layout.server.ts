@@ -6,7 +6,7 @@ export const csr = false;
 export const load: ServerLoad = async ({ cookies }) => {
 	const avatar = cookies.get('avatar') || (await generateAvatar());
 
-	cookies.set('avatar', avatar);
+	cookies.set('avatar', avatar, { path: '/' });
 
 	return {
 		avatar

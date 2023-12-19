@@ -20,6 +20,7 @@
 		"@sveltejs/vite-plugin-svelte": "^3.0.0",
 		"@typescript-eslint/eslint-plugin": "^5.45.0",
 		"@typescript-eslint/parser": "^5.45.0",
+		"esbuild": "^0.19.10",
 		"eslint": "^8.28.0",
 		"eslint-config-prettier": "^8.5.0",
 		"eslint-plugin-svelte": "^2.30.0",
@@ -34,8 +35,10 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@cloudflare/workers-types": "^4.20231121.0",
 		"@supabase/supabase-js": "^2.39.1",
 		"@sveltejs/adapter-cloudflare": "^3.0.0",
-		"dayjs": "^1.11.9"
+		"dayjs": "^1.11.9",
+		"worktop": "0.8.0-next.15"
 	}
 }

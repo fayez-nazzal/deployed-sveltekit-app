@@ -1,10 +1,10 @@
-import { env } from '$env/dynamic/private';
+import { SUPABASE_URL, SUPABASE_PUBLIC_KEY } from '$env/static/private';
 import { DEFAULT_AVATAR_SRC } from '$lib/constants';
 import type { IComment } from '../types';
 import { createClient } from '@supabase/supabase-js';
 
 // Create a single supabase client for interacting with your database
-const supabase = createClient(env.SUPABASE_URL as string, env.SUPABASE_PUBLIC_KEY as string);
+const supabase = createClient(SUPABASE_URL as string, SUPABASE_PUBLIC_KEY as string);
 
 export const fetchUserComments = async () => {
 	const { data: userComments } = await supabase
